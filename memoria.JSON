@@ -1,0 +1,14 @@
+{
+  "HidII_T01": {
+    "grupos": ["Grupo Um", "Grupo Dois", "Grupo Três", "Grupo Quatro"],
+    "pesos": [10, 10, 10, 10]
+  },
+  "HidI_T01_T02": {
+    "grupos": ["Focus", "Acerola", "Do Gervásio", "Grupo Seis", "Caju", "Castanha"],
+    "pesos": [10, 10, 10, 10, 10, 10]
+  },
+  "FT_T01": {
+    "grupos": ["IPE amarelo", "Linha 15", "Calangos do nordeste"],
+    "pesos": [10, 10, 10]
+  }
+}
