@@ -1,0 +1,147 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<title>Sorteador de Grupos</title> 
+	</head> 
+	<body> 
+		<div class="container"> 
+		<h1>Sorteador de Grupos</h1>
+		<label for="turmas">Escolha a turma:</label>
+		<select id="turmas" onchange="mostrarGrupos()">
+		  <option value="">Selecione uma turma</option>
+		  <option value="Hidráulica II">Hidráulica II</option>
+		  <option value="Hidráulica I">Hidráulica I</option>
+		  <option value="Fenômenos">Fenômenos</option>
+		</select>
+
+		<div id="grupos"></div>
+
+		<br>
+
+		<!--<label for="num-sorteios">Número de sorteios por grupo:</label>
+		<input type="text" id="num-sorteios" placeholder="0">
+		<button onclick="atualizarSorteios()">Atualizar</button>-->
+
+		<button onclick="sortearGrupo()">Sortear Grupo</button>
+
+		<p id="resultado"></p>
+
+		<script>
+		  const turmas = JSON.parse('{"Hidráulica II": ["Grupo Um", "Grupo Dois", "Grupo Três", "Grupo Quatro"], "Hidráulica I": ["Calangos do Nordeste", "Linha 15", "Ipê Amaraelo"], "Fenômenos": ["3E", "FETRANS", "AYRTON SENNA", "LG", "INDIVIDUO"]}');
+		  const sorteiosPorGrupo = {}
+		  let totalSorteios = 0;
+
+
+		  const mostrarGrupos = () => {
+		  const turmaSelecionada = document.getElementById("turmas").value;
+		  const grupos = turmas[turmaSelecionada];
+		  let gruposHtml = "";
+		  for (let grupo of grupos) {
+			gruposHtml += '<input type="checkbox" name="grupos" value="' + grupo + '">' + grupo +
+			  '<input type="text" id="num-sorteios-' + grupo + '" placeholder="0">' +
+			  '<button onclick="atualizarSorteios()">Atualizar</button>' +
+			  '<p id="probabilidade-' + grupo + '">Probabilidade: 0.00%</p><br>';
+			  }
+			  document.getElementById("grupos").innerHTML = gruposHtml;
+			}
+
+		  const atualizarSorteios = () => {
+		  const gruposSelecionados = document.getElementsByName("grupos");
+		  totalSorteios = 0; // Reinicialize o total de sorteios
+
+		  for (let i = 0; i < gruposSelecionados.length; i++) {
+			const grupo = gruposSelecionados[i].value;
+			const numSorteios = parseInt(document.getElementById(`num-sorteios-${grupo}`).value) || 0;
+			sorteiosPorGrupo[grupo] = numSorteios;
+			//totalSorteios += numSorteios; // Adicione o número de sorteios deste grupo ao total
+		  }
+
+			  mostrarProbabilidade();
+			};
+
+
+		  const mostrarProbabilidade = () => {
+			const gruposSelecionados = document.getElementsByName("grupos");
+			
+			for (let i = 0; i < gruposSelecionados.length; i++) {
+			  const grupo = gruposSelecionados[i].value;
+			  totalSorteios += sorteiosPorGrupo[grupo];
+			}
+			for (let i = 0; i < gruposSelecionados.length; i++) {
+			  const grupo = gruposSelecionados[i].value;
+			  const probabilidade = (1 - sorteiosPorGrupo[grupo] / (totalSorteios + 1)) * 100;
+			  document.getElementById(`probabilidade-${grupo}`).innerHTML = `Probabilidade: ${probabilidade.toFixed(2)}%`;
+			}
+		  };
+
+		const sortearGrupo = () => {
+		  const gruposSelecionados = document.getElementsByName("grupos");
+		  const grupos = [];
+		  const probabilidades = [];
+
+		  for (let i = 0; i < gruposSelecionados.length; i++) {
+			const grupo = gruposSelecionados[i].value;
+			if (gruposSelecionados[i].checked) {
+			  grupos.push(grupo);
+			  const probabilidade = (1 - sorteiosPorGrupo[grupo] / (totalSorteios + 1)) * 100;
+			  probabilidades.push(probabilidade);
+			  
+			}
+		  }
+
+		  if (grupos.length === 0) {
+			alert("Selecione pelo menos um grupo antes de sortear.");
+			return; // Evita o sorteio se nenhum grupo estiver selecionado
+		  }
+
+		  const grupoSorteado = escolherComProbabilidade(grupos, probabilidades);
+		  document.getElementById("resultado").innerHTML = `Grupo sorteado: ${grupoSorteado}`;
+		};
+
+		
+		const escolherComProbabilidade = (grupos, probabilidades) => {
+		  let valorSorteado;
+		  let totalPond = 0;		  
+		  let somaProbabilidades = 0;
+		  let min = 1;
+		  let max = 10000;
+		  let numSorteiosPond = [];
+
+		  for (let i = 0; i < grupos.length; i++) {
+			somaProbabilidades += probabilidades[i];
+			const grupo2 = grupos[i];
+			const numSorteios2 = parseInt(document.getElementById(`num-sorteios-${grupo2}`).value) || 0;
+			numSorteiosPond[i] = totalSorteios - numSorteios2;
+			totalPond += numSorteiosPond[i];
+			//console.log('totalSorteios',totalSorteios,'totalPond', totalPond);
+		}			
+		
+			if (totalPond == 0) totalPond = grupos.length;
+		
+		valorSorteado = Math.floor( Math.random() * totalPond + 1 );
+			//console.log('valorSorteado',valorSorteado,'totalPond',totalPond);
+		
+		for (let i = 0; i < grupos.length; i++) {
+		
+			if (numSorteiosPond[i] == 0) numSorteiosPond[i] = 1;
+			if (i == 0) min = 1;
+			if (i != 0) min = min + numSorteiosPond[i - 1];
+			max = min + numSorteiosPond[i] - 1;
+			
+			
+			//console.log('i',i,'grupo',grupos[i],'numSorteios2',parseInt(document.getElementById(`num-sorteios-${grupos[i]}`).value) || 0,'numSorteiosPond[i]', numSorteiosPond[i],'min',min,'max',max);
+			if (min <= valorSorteado && valorSorteado <= max) {
+				console.log('grupos[i]',grupos[i]);
+			  return grupos[i];
+			}
+		  }
+
+		  // Caso não seja escolhido dentro do loop, retorne o último grupo como fallback
+		  return grupos[grupos.length - 1];
+		};
+
+
+		</script>
+		</div class="container">
+	</body> 
+</html>
