@@ -1,6 +1,80 @@
 <!DOCTYPE html> 
 <html> 
 	<head> 
+	<meta charset="utf-8">
+		<style>	
+			  .container {
+			max-width: 600px;
+			margin: 0 auto;
+		  }
+		  
+		  body {
+			font-family: Arial, sans-serif;
+			background-color: #f5f5f5;
+		  }
+
+		  h1 {
+			font-size: 2em;
+			text-align: center;
+			margin-top: 1em;
+		  }
+
+		  form {
+			margin: 2em auto;
+			padding: 1em;
+			max-width: 600px;
+			background-color: #fff;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+		  }
+
+		  label {
+			display: block;
+			margin-top: 1em;
+			font-weight: bold;
+		  }
+
+		  input[type="checkbox"] {
+			margin-right: 0.5em;
+		  }
+
+		  button {
+			display: block;
+			margin: 1em auto;
+			padding: 0.5em 1em;
+			background-color: #4CAF50;
+			color: #fff;
+			border: none;
+			border-radius: 5px;
+			cursor: pointer;
+		  }
+
+		  button:hover {
+			background-color: #339933;
+		  }
+
+		  #resultado {
+			margin-top: 1em;
+			font-weight: bold;
+		  }
+
+		  #probabilidade {
+			margin-top: 0.5em;
+			font-size: 0.9em;
+		  }
+
+		  #frase {
+			margin-top: 1em;
+			font-style: italic;
+		  }
+
+		  footer {
+			margin-top: 2em;
+			text-align: center;
+			font-size: 0.8em;
+			color: #666;
+		  }
+		</style>
 		<title>Sorteador de Grupos</title> 
 	</head> 
 	<body> 
@@ -13,7 +87,7 @@
 		  <option value="Hidráulica I">Hidráulica I</option>
 		  <option value="Fenômenos">Fenômenos</option>
 		</select>
-		<a href=index_old.html>outra</a>
+
 		<div id="grupos"></div>
 
 		<br>
@@ -25,9 +99,79 @@
 		<button onclick="sortearGrupo()">Sortear Grupo</button>
 
 		<p id="resultado"></p>
+		<p id="frase"></p>
 
 		<script>
-		  const turmas = JSON.parse('{"Hidráulica II": ["Grupo Um", "Grupo Dois", "Grupo Três", "Grupo Quatro"], "Hidráulica I": ["Calangos do Nordeste", "Linha 15", "Ipê Amaraelo"], "Fenômenos": ["3E", "FETRANS", "AYRTON SENNA", "LG", "INDIVIDUO"]}');
+		  const turmas = JSON.parse('{"Hidráulica II": ["DO WERISKINEY", "SORTEIE OUTRA VEZ", "EM BUSCA DO 5", "CASTANHA COM KAJU", "VERTEDORES"], "Hidráulica I": ["CALANGOS DO NORDESTE", "LINHA 15", "IPÊ AMARELO"], "Fenômenos": ["3E", "AL MOSSAR F.C.", "AYRTON SENNA", "LG", "INDIVIDUO"]}');
+		  
+		  const frases = [
+			  "Você é mais forte do que pensa, e essa avaliação não vai te derrotar.",
+			  "Cada desafio é uma oportunidade de crescimento.",
+			  "Acredite em si mesmo, você está preparado para isso.",
+			  "Você já superou desafios maiores do que este.",
+			  "O conhecimento é a chave para o sucesso, e você está adquirindo isso a cada dia.",
+			  "Esta avaliação é apenas um capítulo em sua jornada educacional.",
+			  "Mantenha a calma e confie em seus estudos.",
+			  "Lembre-se de que você está se preparando para um futuro brilhante.",
+			  "O sucesso vem para aqueles que trabalham duro e nunca desistem.",
+			  "Você é capaz de realizar coisas incríveis.",
+			  "Use esta avaliação como uma oportunidade para brilhar.",
+			  "O esforço que você coloca hoje abrirá portas para o seu amanhã.",
+			  "Não deixe uma avaliação definir seu valor.",
+			  "O aprendizado é uma jornada, e você está no caminho certo.",
+			  "Sua dedicação e esforço são dignos de admiração.",
+			  "Nunca subestime o poder do seu potencial.",
+			  "Pense positivamente; você pode fazer isso!",
+			  "A avaliação é uma chance de mostrar seu conhecimento.",
+			  "Você está um passo mais perto de alcançar seus objetivos.",
+			  "Acredite em seu próprio potencial.",
+			  "Você é muito mais capaz do que imagina.",
+			  "Mantenha o foco e siga em frente.",
+			  "As avaliações são oportunidades para aprender e crescer.",
+			  "Lembre-se de todas as vezes em que superou desafios no passado.",
+			  "Seu esforço vale a pena.",
+			  "Você tem a força para enfrentar qualquer desafio.",
+			  "Você está no controle de seu próprio sucesso.",
+			  "Nunca subestime o poder da preparação.",
+			  "A determinação é a chave para o sucesso.",
+			  "Você é um estudante incrível, e esta avaliação é apenas uma parte disso.",
+			  "Acredite na jornada, não apenas no destino.",
+			  "O conhecimento é o seu maior trunfo.",
+			  "Você está crescendo a cada dia que passa.",
+			  "Mantenha-se positivo, você é mais forte do que pensa.",
+			  "Use esta oportunidade para brilhar.",
+			  "Cada desafio é uma oportunidade disfarçada.",
+			  "Seja corajoso; você consegue superar isso.",
+			  "Lembre-se de que o crescimento ocorre fora da sua zona de conforto.",
+			  "Você está construindo seu próprio futuro.",
+			  "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
+			  "A avaliação é uma oportunidade de mostrar seu progresso.",
+			  "Você tem a capacidade de surpreender a si mesmo.",
+			  "O conhecimento que você adquire é um tesouro que ninguém pode tirar de você.",
+			  "Cada erro é uma oportunidade de aprendizado.",
+			  "Sua mente é mais poderosa do que você imagina.",
+			  "Acredite que você pode, e você está a meio caminho do sucesso.",
+			  "Nunca pare de aprender, pois o conhecimento é infinito.",
+			  "Sua paixão pelo aprendizado é o seu maior trunfo.",
+			  "Você é um aluno brilhante, e esta avaliação é uma chance de brilhar ainda mais.",
+			  "Acredite no processo; os resultados virão.",
+			  "Mantenha-se determinado, mesmo quando os tempos ficarem difíceis.",
+			  "Você é capaz de enfrentar desafios com coragem e determinação.",
+			  "Cada nova conquista é um degrau em direção aos seus sonhos.",
+			  "Lembre-se de que a perseverança é a chave para o sucesso.",
+			  "Sua jornada educacional é uma aventura emocionante.",
+			  "Você é um aprendiz incrível, e esta avaliação é apenas um teste de suas habilidades.",
+			  "O sucesso é uma questão de escolha, e você está escolhendo ser bem-sucedido.",
+			  "Acredite em sua capacidade de superar qualquer obstáculo.",
+			  "Você está no controle do seu destino acadêmico.",
+			  "Não permita que o medo do desconhecido o impeça de avançar.",
+			  "Você é uma fonte inesgotável de potencial.",
+			  "Continue a brilhar, porque o mundo precisa da sua luz.",
+			  "Sua jornada de aprendizado está moldando o seu futuro brilhante.",
+			  "Acredite em si mesmo e no seu poder de alcançar seus objetivos.",
+			  "Você é um estudante incrível, e esta avaliação é apenas uma oportunidade para mostrar isso."
+			];
+		  
 		  const sorteiosPorGrupo = {}
 		  let totalSorteios = 0;
 
@@ -37,12 +181,12 @@
 		  const grupos = turmas[turmaSelecionada];
 		  let gruposHtml = "";
 		  for (let grupo of grupos) {
-			gruposHtml += '<input type="checkbox" name="grupos" value="' + grupo + '">' + grupo +
+			gruposHtml += '<input type="checkbox" checked="checked" name="grupos" value="' + grupo + '">' + grupo + "           " +
 			  '<input type="text" id="num-sorteios-' + grupo + '" placeholder="0">' +
-			  '<button onclick="atualizarSorteios()">Atualizar</button>' +
-			  '<p id="probabilidade-' + grupo + '">Probabilidade: 0.00%</p><br>';
+			  '<p id="probabilidade-' + grupo + '"></p>';
 			  }
-			  document.getElementById("grupos").innerHTML = gruposHtml;
+			  document.getElementById("grupos").innerHTML = gruposHtml + 
+			  '<button onclick="atualizarSorteios()">Atualizar</button>';
 			}
 
 		  const atualizarSorteios = () => {
@@ -52,7 +196,7 @@
 		  for (let i = 0; i < gruposSelecionados.length; i++) {
 			const grupo = gruposSelecionados[i].value;
 			const numSorteios = parseInt(document.getElementById(`num-sorteios-${grupo}`).value) || 0;
-			sorteiosPorGrupo[grupo] = numSorteios;
+			sorteiosPorGrupo[grupo] = numSorteios + 1;
 			//totalSorteios += numSorteios; // Adicione o número de sorteios deste grupo ao total
 		  }
 
@@ -62,15 +206,23 @@
 
 		  const mostrarProbabilidade = () => {
 			const gruposSelecionados = document.getElementsByName("grupos");
+			let totalpond = 0;
 			
 			for (let i = 0; i < gruposSelecionados.length; i++) {
 			  const grupo = gruposSelecionados[i].value;
 			  totalSorteios += sorteiosPorGrupo[grupo];
+			  //console.log('grupo',grupo,'sorteiosPorGrupo[grupo]',sorteiosPorGrupo[grupo],'totalSorteios',totalSorteios);
 			}
 			for (let i = 0; i < gruposSelecionados.length; i++) {
 			  const grupo = gruposSelecionados[i].value;
-			  const probabilidade = (1 - sorteiosPorGrupo[grupo] / (totalSorteios + 1)) * 100;
-			  document.getElementById(`probabilidade-${grupo}`).innerHTML = `Probabilidade: ${probabilidade.toFixed(2)}%`;
+			  totalpond += (totalSorteios - sorteiosPorGrupo[grupo]);
+			  //console.log('grupo',grupo,'sorteiosPorGrupo[grupo]',sorteiosPorGrupo[grupo],'totalSorteios',totalSorteios,'totalpond',totalpond);
+			}
+			for (let i = 0; i < gruposSelecionados.length; i++) {
+			  const grupo = gruposSelecionados[i].value;
+			  const probabilidade = 100 * (totalSorteios - sorteiosPorGrupo[grupo])/totalpond;//(1 - sorteiosPorGrupo[grupo] / (totalSorteios + 1)) * 100;
+			  document.getElementById(`probabilidade-${grupo}`).innerHTML = `P aprox: ${probabilidade.toFixed(0)}%`;
+			  //console.log('grupo',grupo,'sorteiosPorGrupo[grupo]',sorteiosPorGrupo[grupo],'totalSorteios',totalSorteios,'totalpond',totalpond,'probabilidade',probabilidade);
 			}
 		  };
 
@@ -95,7 +247,9 @@
 		  }
 
 		  const grupoSorteado = escolherComProbabilidade(grupos, probabilidades);
-		  document.getElementById("resultado").innerHTML = `Grupo sorteado: ${grupoSorteado}`;
+			document.getElementById("resultado").innerHTML = `Grupo sorteado: ${grupoSorteado}`;
+		  const indiceFrase = Math.floor(Math.random() * frases.length);
+			document.getElementById("frase").innerHTML = frases[indiceFrase];
 		};
 
 		
@@ -131,7 +285,7 @@
 			
 			//console.log('i',i,'grupo',grupos[i],'numSorteios2',parseInt(document.getElementById(`num-sorteios-${grupos[i]}`).value) || 0,'numSorteiosPond[i]', numSorteiosPond[i],'min',min,'max',max);
 			if (min <= valorSorteado && valorSorteado <= max) {
-				console.log('grupos[i]',grupos[i]);
+				console.log('grupo:',grupos[i]);
 			  return grupos[i];
 			}
 		  }
