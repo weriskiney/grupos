@@ -1,109 +1,152 @@
 <!DOCTYPE html> 
 <html> 
-	<head> 
-	<meta charset="utf-8">
-		<style>	
-			  .container {
-			max-width: 600px;
-			margin: 0 auto;
-		  }
-		  .omg{
-		        text-align: center;
-		  }
-		  body {
-			font-family: Arial, sans-serif;
-			background-color: #f5f5f5;
-		  }
+<head> 
+    <meta charset="utf-8">
+    <style>	
+          body {
+            font-family: Arial, sans-serif;
+            background-color: #000; /* Fundo preto */
+            color: #FFD700; /* Texto amarelo */
+            margin: 0;
+            padding: 0;
+          }
 
-		  h1 {
-			font-size: 2em;
-			text-align: center;
-			margin-top: 1em;
-		  }
+          .main-container {
+            display: flex;
+            min-height: 100vh; /* Altura mínima da tela */
+          }
 
-		  form {
-			margin: 2em auto;
-			padding: 1em;
-			max-width: 600px;
-			background-color: #fff;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-		  }
+          .left-column {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background-color: #111; /* Opcional: fundo escuro para a coluna da imagem */
+          }
 
-		  label {
-			display: block;
-			margin-top: 1em;
-			font-weight: bold;
-		  }
+          .right-column {
+            flex: 2;
+            padding: 20px;
+          }
 
-		  input[type="checkbox"] {
-			margin-right: 0.5em;
-		  }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+          }
 
-		  button {
-			display: block;
-			margin: 1em auto;
-			padding: 0.5em 1em;
-			background-color: #4CAF50;
-			color: #fff;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-		  }
+          .omg img {
+            max-width: 100%;
+            height: auto;
+          }
 
-		  button:hover {
-			background-color: #339933;
-		  }
+          /* Resto do seu CSS original com ajustes de cor se necessário */
 
-		  #resultado {
-			margin-top: 1em;
-			font-weight: bold;
-		  }
+          h1 {
+            font-size: 2em;
+            text-align: center;
+            margin-top: 1em;
+          }
 
-		  #probabilidade {
-			margin-top: 0.5em;
-			font-size: 0.9em;
-		  }
+          form {
+            margin: 2em auto;
+            padding: 1em;
+            max-width: 600px;
+            background-color: #222; /* Fundo ligeiramente claro para contraste */
+            border: 1px solid #444;
+            border-radius: 5px;
+          }
 
-		  #frase {
-			margin-top: 1em;
-			font-style: italic;
-		  }
+          label {
+            display: block;
+            margin-top: 1em;
+            font-weight: bold;
+          }
 
-		  footer {
-			margin-top: 2em;
-			text-align: center;
-			font-size: 0.8em;
-			color: #666;
-		  }
-		</style>
-		<title>Multiverso</title> 
-	</head> 
-	<body> 
-		<div class="omg"> 
-		<img src="OIG.vqAIqx.jpeg" width="30%">
-		</div>
-		<div class="container">
-		<label for="turmas">Escolha a turma:</label>
-		<select id="turmas" onchange="mostrarGrupos()">
-		  <option value="">Selecione uma turma</option>
-		  <option value="Hidráulica II">Hidráulica II</option>
-		  <option value="Hidráulica I">Hidráulica I</option>
-		  <option value="Fenômenos">Fenômenos</option>
-		</select>
+          input[type="checkbox"] {
+            margin-right: 0.5em;
+          }
 
-		<div id="grupos"></div>
+          input[type="number"] {
+            margin-left: 0.5em;
+            padding: 0.3em;
+            border: 1px solid #555;
+            border-radius: 3px;
+            background-color: #333;
+            color: #FFD700;
+          }
 
-		<br>
+          button {
+            display: block;
+            margin: 1em auto;
+            padding: 0.5em 1em;
+            background-color: #4CAF50;
+            color: #FFD700; /* Texto amarelo nos botões */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+          }
 
-		<!--<label for="num-sorteios">Número de sorteios por grupo:</label>
-		<input type="text" id="num-sorteios" placeholder="0">
-		<button onclick="atualizarSorteios()">Atualizar</button>-->
+          button:hover {
+            background-color: #339933;
+          }
 
-		<button onclick="sortearGrupo()">Sortear Grupo</button>
+          #resultado {
+            margin-top: 1em;
+            font-weight: bold;
+          }
 
-		<p id="resultado"></p>
-		<p id="frase"></p>
+          #probabilidade {
+            margin-top: 0.5em;
+            font-size: 0.9em;
+          }
+
+          #frase {
+            margin-top: 1em;
+            font-style: italic;
+          }
+
+          footer {
+            margin-top: 2em;
+            text-align: center;
+            font-size: 0.8em;
+            color: #999;
+          }
+    </style>
+    <title>Multiverso</title> 
+</head> 
+<body> 
+    <div class="main-container">
+        <div class="left-column">
+            <div class="omg"> 
+                <img src="OIG.vqAIqx.jpeg" alt="Imagem">
+            </div>
+        </div>
+        <div class="right-column">
+            <div class="container">
+                <label for="turmas">Escolha a turma:</label>
+                <select id="turmas" onchange="mostrarGrupos()">
+                  <option value="">Selecione uma turma</option>
+                  <option value="Hidráulica II">Hidráulica II</option>
+                  <option value="Hidráulica I">Hidráulica I</option>
+                  <option value="Fenômenos">Fenômenos</option>
+                </select>
+
+                <div id="grupos"></div>
+
+                <br>
+
+                <!--<label for="num-sorteios">Número de sorteios por grupo:</label>
+                <input type="text" id="num-sorteios" placeholder="0">
+                <button onclick="atualizarSorteios()">Atualizar</button>-->
+
+                <button onclick="sortearGrupo()">Sortear Grupo</button>
+
+                <p id="resultado"></p>
+                <p id="frase"></p>
+            </div>
+        </div>
+    </div>
 
 		<script>
 		  const turmas = JSON.parse('{"Fenômenos": ["Do Extraordinário", "Inova Dores", "Gafanhotos", "Programando músculos", "Dois irmãos", "Dos Pablitos", "Improvisado", "Dorme que passa"], "Hidráulica I": ["Top10", "WerisCats", "Do Lanchinho", "Do IA", "Lucky"], "Hidráulica II": ["Fusão", "Fim de Carreira", "Titanic", "Linha 15", "Ipê Azul", "Brazino"]}');
