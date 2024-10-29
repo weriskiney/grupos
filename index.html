@@ -99,6 +99,37 @@ footer {
     font-size: 0.8em;
     color: #999;
 }
+/* Estilos para os botões Atualizar e SORTEAR */
+#atualizarBtn, #sortearBtn {
+    background-color: purple; /* Fundo roxo */
+    color: pink; /* Letra rosa */
+    text-transform: uppercase; /* Caixa alta */
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#atualizarBtn:hover, #sortearBtn:hover {
+    background-color: #800080; /* Tom mais escuro de roxo no hover */
+}
+	    /* Estilos para a barra de carregamento */
+.loader {
+    border: 8px solid #f3f3f3; /* Cor de fundo da barra */
+    border-top: 8px solid pink; /* Cor da barra de progresso */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
 
     </style>
     <title>Multiverso</title> 
@@ -121,6 +152,9 @@ footer {
                   <option value="Fenômenos">Fenômenos</option>
                 </select>
 
+		    <br>
+		    <br>
+
                 <div id="grupos" class="grupos-container"></div>
 
                 <br>
@@ -129,10 +163,15 @@ footer {
                 <input type="text" id="num-sorteios" placeholder="0">
                 <button onclick="atualizarSorteios()">Atualizar</button>-->
 
-                <button onclick="sortearGrupo()">Sortear Grupo</button>
+                <button id="sortearBtn" onclick="sortearGrupo()">SORTEAR</button>
 
                 <p id="resultado"></p>
-                <p id="frase"></p>
+		<div id="loading" style="display: none; text-align: center; margin-top: 1em;">
+		    <div class="loader"></div>
+		    <p>Rolando os dados...</p>
+		</div>
+		<p id="frase"></p>
+
             </div>
         </div>
     </div>
@@ -212,7 +251,7 @@ footer {
 		        `;
 		    });
 		
-		    gruposHtml += `<button onclick="atualizarSorteios()">Atualizar</button>`;
+		    gruposHtml += `<button id="atualizarBtn" onclick="atualizarSorteios()">ATUALIZAR</button>`;
 		    document.getElementById("grupos").innerHTML = gruposHtml;
 		};
 
@@ -255,30 +294,50 @@ footer {
 		  };
 
 		const sortearGrupo = () => {
-		  const gruposSelecionados = document.getElementsByName("grupos");
-		  const grupos = [];
-		  const probabilidades = [];
+    const gruposSelecionados = document.getElementsByName("grupos");
+    const grupos = [];
+    const probabilidades = [];
 
-		  for (let i = 0; i < gruposSelecionados.length; i++) {
-			const grupo = gruposSelecionados[i].value;
-			if (gruposSelecionados[i].checked) {
-			  grupos.push(grupo);
-			  const probabilidade = (1 - sorteiosPorGrupo[grupo] / (totalSorteios + 1)) * 100;
-			  probabilidades.push(probabilidade);
-			  
-			}
-		  }
+    for (let i = 0; i < gruposSelecionados.length; i++) {
+      const grupo = gruposSelecionados[i].value;
+      if (gruposSelecionados[i].checked) {
+        grupos.push(grupo);
+        const probabilidade = (1 - sorteiosPorGrupo[grupo] / (totalSorteios + 1)) * 100;
+        probabilidades.push(probabilidade);
+        
+      }
+    }
 
-		  if (grupos.length === 0) {
-			alert("Selecione pelo menos um grupo antes de sortear.");
-			return; // Evita o sorteio se nenhum grupo estiver selecionado
-		  }
+    if (grupos.length === 0) {
+      alert("Selecione pelo menos um grupo antes de sortear.");
+      return; // Evita o sorteio se nenhum grupo estiver selecionado
+    }
 
-		  const grupoSorteado = escolherComProbabilidade(grupos, probabilidades);
-			document.getElementById("resultado").innerHTML = `Grupo sorteado: ${grupoSorteado}`;
-		  const indiceFrase = Math.floor(Math.random() * frases.length);
-			document.getElementById("frase").innerHTML = frases[indiceFrase];
-		};
+    // Exibir a barra de carregamento
+    document.getElementById("resultado").innerHTML = "";
+    document.getElementById("loading").style.display = "block";
+    document.getElementById("frase").innerHTML = "";
+
+    // Definir o tempo de delay aleatório entre 6 e 10 segundos
+    const delay = Math.floor(Math.random() * (10000 - 6000 + 1)) + 6000;
+
+    // Atualizar frases a cada 5 segundos durante o delay
+    let fraseInterval = setInterval(() => {
+        const indiceFrase = Math.floor(Math.random() * frases.length);
+        document.getElementById("frase").innerHTML = frases[indiceFrase];
+    }, 5000);
+
+    // Executar o sorteio após o delay
+    setTimeout(() => {
+        clearInterval(fraseInterval); // Parar de atualizar as frases
+        const grupoSorteado = escolherComProbabilidade(grupos, probabilidades);
+        document.getElementById("resultado").innerHTML = `Grupo sorteado: ${grupoSorteado}`;
+        const indiceFrase = Math.floor(Math.random() * frases.length);
+        document.getElementById("frase").innerHTML = frases[indiceFrase];
+        document.getElementById("loading").style.display = "none"; // Ocultar a barra de carregamento
+    }, delay);
+};
+
 
 		
 		const escolherComProbabilidade = (grupos, probabilidades) => {
